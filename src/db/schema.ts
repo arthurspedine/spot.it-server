@@ -9,7 +9,6 @@ export const users = pgTable('users', {
   username: text('username').notNull().unique(),
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
-  profilePicture: text('profile_picture').notNull(),
   score: numeric('score').default('0'),
 })
 
@@ -27,7 +26,6 @@ export const wallies = pgTable('wallies', {
     .$defaultFn(() => createId()),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
-  profilePicture: text('profile_picture').notNull(),
   createdAt: timestamp('created_at').$default(() => new Date()),
   roleId: text('role_id')
     .notNull()

@@ -15,6 +15,13 @@
       "when": 1728353008792,
       "tag": "0001_add_user_score",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728410431011,
+      "tag": "0002_remove_profile_pictures",
+      "breakpoints": true
     }
   ]
 }
