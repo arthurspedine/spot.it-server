@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "score" numeric DEFAULT '0';

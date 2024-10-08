@@ -10,6 +10,7 @@ export const users = pgTable('users', {
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
   profilePicture: text('profile_picture').notNull(),
+  score: numeric('score').default('0'),
 })
 
 export const wallyRoles = pgTable('wally_roles', {
