@@ -1,5 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import {
+  type CreateWallyRoleInput,
   createWallySchema,
   type CreateWallyInput,
   type GetWallyDetailsParams,
@@ -132,4 +133,23 @@ export async function createWally(req: FastifyRequest, reply: FastifyReply) {
     message: 'Wally created succesfully.',
     wally: { ...wally },
   })
+}
+
+export async function createWallyRole(
+  req: FastifyRequest<{ Body: CreateWallyRoleInput }>,
+  reply: FastifyReply
+) {
+  const { role, scoreMultiplier } = req.body
+
+  const wallyRoleResult = await db
+    .insert(wallyRoles)
+    .values({
+      role,
+      scoreMultiplier: String(scoreMultiplier),
+    })
+    .returning()
+
+  const wallyRole = wallyRoleResult[0]
+
+  return reply.code(200).send(wallyRole)
 }
