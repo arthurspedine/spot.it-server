@@ -5,7 +5,7 @@ import {
   loginSchema,
 } from './user.schema'
 import fastifyMultipart from '@fastify/multipart'
-import { createUser, getUserDetails, login } from './user.controller'
+import { createUser, getRank, getUserDetails, login } from './user.controller'
 
 export async function userRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart)
@@ -30,7 +30,7 @@ export async function userRoutes(app: FastifyInstance) {
         description: 'Get the users rank.',
       },
     },
-    () => {}
+    getRank
   )
 
   app.post(

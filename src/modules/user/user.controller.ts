@@ -9,7 +9,7 @@ import { db } from '../../db'
 import bcrypt from 'bcrypt'
 import { encounters, users, wallies, wallyRoles } from '../../db/schema'
 import { unknown } from 'zod'
-import { eq, or, sql } from 'drizzle-orm'
+import { desc, eq, or, sql } from 'drizzle-orm'
 
 export async function createUser(req: FastifyRequest, reply: FastifyReply) {
   const parts = req.parts()
@@ -171,4 +171,18 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
   }
 
   return reply.code(200).send(user)
+}
+
+export async function getRank(req: FastifyRequest, reply: FastifyReply) {
+  const usersResult = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      username: users.username,
+      score: users.score,
+    })
+    .from(users)
+    .orderBy(desc(users.score))
+
+  return reply.code(200).send(usersResult)
 }
