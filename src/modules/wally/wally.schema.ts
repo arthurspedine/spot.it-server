@@ -18,7 +18,6 @@ export const createWallySchema = z.object({
     .string()
     .email('Formato de email inválido.')
     .max(100, 'O email deve ter no máximo 100 caracteres.'),
-  profilePicture: z.string().min(1),
   role: z.string().min(1),
 })
 

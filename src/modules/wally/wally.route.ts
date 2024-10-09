@@ -1,7 +1,7 @@
 import fastifyMultipart from '@fastify/multipart'
 import type { FastifyInstance } from 'fastify'
 import { getWallyDetailsSchema } from './wally.schema'
-import { getWallies, getWallyDetails } from './wally.controller'
+import { createWally, getWallies, getWallyDetails } from './wally.controller'
 
 export async function wallyRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart)
@@ -38,7 +38,7 @@ export async function wallyRoutes(app: FastifyInstance) {
         description: 'Create a wally.',
       },
     },
-    () => {}
+    createWally
   )
 
   app.post(
