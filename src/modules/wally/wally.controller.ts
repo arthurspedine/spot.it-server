@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import type { GetWallyDetailsParams } from './wally.schema'
 import { db } from '../../db'
-import { wallies, wallyRoles } from '../../db/schema'
-import { eq, sql } from 'drizzle-orm'
+import { encounters, wallies, wallyRoles } from '../../db/schema'
+import { count, eq, sql } from 'drizzle-orm'
 
 export async function getWallyDetails(
   req: FastifyRequest<{ Params: GetWallyDetailsParams }>,
@@ -32,4 +32,37 @@ export async function getWallyDetails(
   }
 
   return reply.code(200).send(wally)
+}
+
+export async function getWallies(_: FastifyRequest, reply: FastifyReply) {
+  const encountersCount = await db.$with('encounters_count').as(
+    db
+      .select({
+        wallyId: encounters.wallyId,
+        encountersCount: count(encounters.id).as('encounters_count'),
+      })
+      .from(encounters)
+      .groupBy(encounters.wallyId)
+  )
+
+  const walliesResult = await db
+    .with(encountersCount)
+    .select({
+      id: wallies.id,
+      name: wallies.name,
+      role: sql /*sql*/`
+        JSON_BUILD_OBJECT(
+            'name', ${wallyRoles.role},
+            'scoreMultiplier', ${wallyRoles.scoreMultiplier}
+        )
+    `.as('role'),
+      encounters: sql /*sql*/`
+        COALESCE(${encountersCount.encountersCount}::int, 0)
+    `.as('encountersCount'),
+    })
+    .from(wallies)
+    .leftJoin(encountersCount, eq(encountersCount.wallyId, wallies.id))
+    .leftJoin(wallyRoles, eq(wallyRoles.id, wallies.roleId))
+
+  return reply.code(200).send(walliesResult)
 }

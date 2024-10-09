@@ -155,7 +155,7 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
       name: users.name,
       email: users.email,
       username: users.username,
-      score: users.score,
+      score: sql<number> /*sql*/`${users.score}::int`.as('score'),
       encounters: sql /*sql*/`
         COALESCE(${userEncounters.encounters}, '[]'::json)
       `.as('encounters'),
@@ -173,13 +173,13 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
   return reply.code(200).send(user)
 }
 
-export async function getRank(req: FastifyRequest, reply: FastifyReply) {
+export async function getRank(_: FastifyRequest, reply: FastifyReply) {
   const usersResult = await db
     .select({
       id: users.id,
       name: users.name,
       username: users.username,
-      score: users.score,
+      score: sql<number> /*sql*/`${users.score}::int`.as('score'),
     })
     .from(users)
     .orderBy(desc(users.score))
