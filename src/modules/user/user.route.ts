@@ -1,9 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import {
-  createUserSchema,
-  loginResponseSchema,
-  loginSchema,
-} from './user.schema'
+import { loginResponseSchema, loginSchema } from './user.schema'
 import fastifyMultipart from '@fastify/multipart'
 import { createUser, getRank, getUserDetails, login } from './user.controller'
 

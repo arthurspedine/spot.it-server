@@ -13,6 +13,7 @@ import fCookie from '@fastify/cookie'
 import fjwt, { type FastifyJWT } from '@fastify/jwt'
 import { userRoutes } from './modules/user/user.route'
 import supabase from 'fastify-supabase'
+import { wallyRoutes } from './modules/wally/wally.route'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -77,6 +78,7 @@ app.register(fastifySwaggerUi, {
 })
 
 app.register(userRoutes, { prefix: '/user' })
+app.register(wallyRoutes, { prefix: '/wally' })
 
 async function main() {
   await app.listen({
