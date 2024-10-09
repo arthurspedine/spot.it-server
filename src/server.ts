@@ -12,6 +12,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui'
 import fCookie from '@fastify/cookie'
 import fjwt, { type FastifyJWT } from '@fastify/jwt'
 import { userRoutes } from './modules/user/user.route'
+import supabase from 'fastify-supabase'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -52,6 +53,11 @@ app.decorate(
     req.user = decoded
   }
 )
+
+app.register(supabase, {
+  supabaseKey: env.SUPABASE_KEY,
+  supabaseUrl: env.SUPABASE_URL,
+})
 
 app.register(fastifySwagger, {
   swagger: {

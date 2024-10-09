@@ -28,7 +28,6 @@ export const createUserSchema = z.object({
       /[^A-Za-z0-9]/,
       'A senha deve conter pelo menos um caractere especial.'
     ),
-  profilePicture: z.string().min(1),
 })
 
 export type CreateUserInput = z.infer<typeof createUserSchema>
@@ -37,22 +36,14 @@ export const loginSchema = z.object({
   identifier: z
     .union([
       z
-        .string()
-        .email('Formato de email inválido.')
-        .max(100, 'O email deve ter no máximo 100 caracteres.'),
+        .string(),
       z
         .string()
-        .min(3, 'O username deve ter pelo menos 3 caracteres.')
-        .max(20, 'O username deve ter no máximo 20 caracteres.')
-        .regex(
-          /^[a-zA-Z0-9_]+$/,
-          'O username deve conter apenas letras, números e sublinhados.'
-        ),
     ])
     .refine(val => val.includes('@') || /^[a-zA-Z0-9_]+$/.test(val), {
       message: 'É necessário fornecer um email ou um username válido.',
     }),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
+  password: z.string(),
 })
 
 export type LoginInput = z.infer<typeof loginSchema>

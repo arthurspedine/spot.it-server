@@ -4,17 +4,22 @@ import {
   loginResponseSchema,
   loginSchema,
 } from './user.schema'
+import fastifyMultipart from '@fastify/multipart'
+import { createUser, getUserDetails, login } from './user.controller'
 
 export async function userRoutes(app: FastifyInstance) {
+  app.register(fastifyMultipart)
+
   app.get(
     '/',
     {
+      preHandler: [app.authenticate],
       schema: {
         tags: ['user'],
         description: 'Get a user details.',
       },
     },
-    () => {}
+    getUserDetails
   )
 
   app.get(
@@ -34,10 +39,9 @@ export async function userRoutes(app: FastifyInstance) {
       schema: {
         tags: ['user'],
         description: 'Create a user.',
-        body: createUserSchema,
       },
     },
-    () => {}
+    createUser
   )
 
   app.post(
@@ -50,7 +54,7 @@ export async function userRoutes(app: FastifyInstance) {
         response: { 201: loginResponseSchema },
       },
     },
-    () => {}
+    login
   )
 
   app.log.info('user routes registered')
