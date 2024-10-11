@@ -1,0 +1,9 @@
+{
+  "installCommand": "npm install && npm run db:migrate",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ]
+}

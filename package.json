@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/server.ts"
+    "dev": "tsx watch --env-file .env src/server.ts",
+    "db:migrate": "tsx src/db/migrate.ts"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,7 @@
     "@fastify/swagger-ui": "^5.0.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@types/bcrypt": "^5.0.2",
+    "@vercel/node": "^3.2.23",
     "bcrypt": "^5.1.1",
     "drizzle-orm": "^0.34.1",
     "fastify": "^5.0.0",
