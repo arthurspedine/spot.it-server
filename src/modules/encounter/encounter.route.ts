@@ -4,7 +4,12 @@ import { registerEncounterSchema } from './encounter.schema'
 import { registerEncounter } from './encounter.controller'
 
 export async function encounterRoutes(app: FastifyInstance) {
-  app.register(fastifyMultipart)
+  app.register(fastifyMultipart, {
+    limits: {
+      files: 1,
+      fileSize: 10 * 1024 * 1024,
+    },
+  })
 
   app.post(
     '/',

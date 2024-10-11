@@ -4,7 +4,12 @@ import fastifyMultipart from '@fastify/multipart'
 import { createUser, getRank, getUserDetails, login } from './user.controller'
 
 export async function userRoutes(app: FastifyInstance) {
-  app.register(fastifyMultipart)
+  app.register(fastifyMultipart, {
+    limits: {
+      files: 1,
+      fileSize: 10 * 1024 * 1024,
+    },
+  })
 
   app.get(
     '/',

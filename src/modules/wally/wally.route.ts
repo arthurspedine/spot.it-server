@@ -9,7 +9,12 @@ import {
 } from './wally.controller'
 
 export async function wallyRoutes(app: FastifyInstance) {
-  app.register(fastifyMultipart)
+  app.register(fastifyMultipart, {
+    limits: {
+      files: 1,
+      fileSize: 10 * 1024 * 1024,
+    },
+  })
 
   app.get(
     '/:id',
