@@ -7,7 +7,7 @@ export async function encounterRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart, {
     limits: {
       files: 1,
-      fileSize: 1000000,
+      fileSize: 10000000,
     },
   })
 

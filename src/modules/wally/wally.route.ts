@@ -12,7 +12,7 @@ export async function wallyRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart, {
     limits: {
       files: 1,
-      fileSize: 1000000,
+      fileSize: 10000000,
     },
   })
 
