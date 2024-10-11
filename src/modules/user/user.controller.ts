@@ -53,7 +53,7 @@ export async function createUser(req: FastifyRequest, reply: FastifyReply) {
   const { supabase } = app
   const { error } = await supabase.storage
     .from('spot.it')
-    .upload(`${username}.jpg`, profilePicture, { contentType: 'image/jpg' })
+    .upload(`${user.id}.jpg`, profilePicture, { contentType: 'image/jpg' })
 
   if (error) {
     console.error(error)

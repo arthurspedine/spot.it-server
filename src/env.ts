@@ -7,6 +7,7 @@ const envSchema = z.object({
   SUPABASE_URL: z.string().url(),
   JWT_SECRET: z.string(),
   COOKIE_SECRET: z.string(),
+  AI_URL: z.string().url(),
 })
 
 export const env = envSchema.parse(process.env)

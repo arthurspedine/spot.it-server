@@ -14,6 +14,7 @@ import fjwt, { type FastifyJWT } from '@fastify/jwt'
 import { userRoutes } from './modules/user/user.route'
 import supabase from 'fastify-supabase'
 import { wallyRoutes } from './modules/wally/wally.route'
+import { encounterRoutes } from './modules/encounter/encounter.route'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -79,6 +80,7 @@ app.register(fastifySwaggerUi, {
 
 app.register(userRoutes, { prefix: '/user' })
 app.register(wallyRoutes, { prefix: '/wally' })
+app.register(encounterRoutes, { prefix: '/encounter' })
 
 async function main() {
   await app.listen({
