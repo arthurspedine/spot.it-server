@@ -107,6 +107,17 @@ export async function registerEncounter(
         return tx.rollback()
       }
 
+      const { publicURL } = await supabase.storage
+        .from('spot.it')
+        .getPublicUrl(`${encounter.id}.jpg`)
+
+      await db
+        .update(encounters)
+        .set({
+          encounterPicture: publicURL,
+        })
+        .where(eq(encounters.id, encounter.id))
+
       return { encounter }
     })
 

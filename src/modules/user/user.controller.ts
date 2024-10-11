@@ -60,6 +60,17 @@ export async function createUser(req: FastifyRequest, reply: FastifyReply) {
     return reply.code(500).send({ error: 'Something went wrong.' })
   }
 
+  const { publicURL } = await supabase.storage
+    .from('spot.it')
+    .getPublicUrl(`${user.id}.jpg`)
+
+  await db
+    .update(users)
+    .set({
+      profilePicture: publicURL,
+    })
+    .where(eq(users.id, user.id))
+
   return reply.code(201).send({
     message: 'User created succesfully.',
     user: { ...user, password: unknown },
@@ -113,6 +124,7 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
         id: encounters.id,
         userId: encounters.userId,
         occuredAt: encounters.occuredAt,
+        encounterPicture: encounters.encounterPicture,
         wally: sql /*sql*/`
           JSON_BUILD_OBJECT(
             'id', ${wallies.id},
@@ -155,6 +167,7 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
       name: users.name,
       email: users.email,
       username: users.username,
+      profilePicture: users.profilePicture,
       score: sql<number> /*sql*/`${users.score}::int`.as('score'),
       encounters: sql /*sql*/`
         COALESCE(${userEncounters.encounters}, '[]'::json)
@@ -179,6 +192,7 @@ export async function getRank(_: FastifyRequest, reply: FastifyReply) {
       id: users.id,
       name: users.name,
       username: users.username,
+      profilePicture: users.profilePicture,
       score: sql<number> /*sql*/`${users.score}::int`.as('score'),
     })
     .from(users)

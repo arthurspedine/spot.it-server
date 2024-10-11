@@ -20,6 +20,7 @@ export async function getWallyDetails(
     .select({
       id: wallies.id,
       name: wallies.name,
+      profilePicture: wallies.profilePicture,
       role: sql /*sql*/`
         JSON_BUILD_OBJECT(
             'name', ${wallyRoles.role},
@@ -56,6 +57,7 @@ export async function getWallies(_: FastifyRequest, reply: FastifyReply) {
     .select({
       id: wallies.id,
       name: wallies.name,
+      profilePicture: wallies.profilePicture,
       role: sql /*sql*/`
         JSON_BUILD_OBJECT(
             'name', ${wallyRoles.role},
@@ -128,6 +130,17 @@ export async function createWally(req: FastifyRequest, reply: FastifyReply) {
     console.error(error)
     return reply.code(500).send({ error: 'Something went wrong.' })
   }
+
+  const { publicURL } = await supabase.storage
+    .from('spot.it')
+    .getPublicUrl(`${wally.id}.jpg`)
+
+  await db
+    .update(wallies)
+    .set({
+      profilePicture: publicURL,
+    })
+    .where(eq(wallies.id, wally.id))
 
   return reply.code(201).send({
     message: 'Wally created succesfully.',

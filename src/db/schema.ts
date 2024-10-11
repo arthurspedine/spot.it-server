@@ -10,6 +10,7 @@ export const users = pgTable('users', {
   email: text('email').notNull().unique(),
   password: text('password').notNull(),
   score: numeric('score').default('0'),
+  profilePicture: text('profile_picture'),
 })
 
 export const wallyRoles = pgTable('wally_roles', {
@@ -30,6 +31,7 @@ export const wallies = pgTable('wallies', {
   roleId: text('role_id')
     .notNull()
     .references(() => wallyRoles.id),
+  profilePicture: text('profile_picture'),
 })
 
 export const encounters = pgTable('encounters', {
@@ -43,4 +45,5 @@ export const encounters = pgTable('encounters', {
     .notNull()
     .references(() => wallies.id),
   occuredAt: timestamp('occured_at').$default(() => new Date()),
+  encounterPicture: text('encounter_picture'),
 })

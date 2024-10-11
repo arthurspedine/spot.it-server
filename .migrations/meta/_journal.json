@@ -22,6 +22,13 @@
       "when": 1728410431011,
       "tag": "0002_remove_profile_pictures",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1728689186408,
+      "tag": "0003_add_picture_urls",
+      "breakpoints": true
     }
   ]
 }
