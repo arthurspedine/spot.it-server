@@ -111,11 +111,9 @@ export async function registerEncounter(
         .from('spot.it')
         .getPublicUrl(`${encounter.id}.jpg`)
 
-      await db
+      await tx
         .update(encounters)
-        .set({
-          encounterPicture: publicURL,
-        })
+        .set({ encounterPicture: publicURL })
         .where(eq(encounters.id, encounter.id))
 
       return { encounter }

@@ -148,6 +148,7 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
               JSON_BUILD_OBJECT(
                 'id', ${encountersDetails.id},
                 'occuredAt', ${encountersDetails.occuredAt},
+                'encounterPicture', ${encountersDetails.encounterPicture},
                 'wally', ${encountersDetails.wally}
               )
             ),
