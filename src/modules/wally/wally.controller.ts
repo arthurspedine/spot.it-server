@@ -1,14 +1,14 @@
+import { count, eq, sql } from 'drizzle-orm'
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  type CreateWallyRoleInput,
-  createWallySchema,
-  type CreateWallyInput,
-  type GetWallyDetailsParams,
-} from './wally.schema'
 import { db } from '../../db'
 import { encounters, wallies, wallyRoles } from '../../db/schema'
-import { count, eq, sql } from 'drizzle-orm'
 import app from '../../server'
+import {
+  type CreateWallyInput,
+  type CreateWallyRoleInput,
+  type GetWallyDetailsParams,
+  createWallySchema,
+} from './wally.schema'
 
 export async function getWallyDetails(
   req: FastifyRequest<{ Params: GetWallyDetailsParams }>,
@@ -146,6 +146,18 @@ export async function createWally(req: FastifyRequest, reply: FastifyReply) {
     message: 'Wally created succesfully.',
     wally: { ...wally },
   })
+}
+
+export async function getWallyRoles(req: FastifyRequest, reply: FastifyReply) {
+  const wallyRoleResult = await db
+    .select({
+      id: wallyRoles.id,
+      role: wallyRoles.role,
+      scoreMultiplier: wallyRoles.scoreMultiplier,
+    })
+    .from(wallyRoles)
+
+  return reply.code(200).send(wallyRoleResult)
 }
 
 export async function createWallyRole(

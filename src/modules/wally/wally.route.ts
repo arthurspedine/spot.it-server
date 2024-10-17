@@ -1,12 +1,13 @@
 import fastifyMultipart from '@fastify/multipart'
 import type { FastifyInstance } from 'fastify'
-import { getWallyDetailsSchema } from './wally.schema'
 import {
   createWally,
   createWallyRole,
   getWallies,
   getWallyDetails,
+  getWallyRoles,
 } from './wally.controller'
+import { getWallyDetailsSchema } from './wally.schema'
 
 export async function wallyRoutes(app: FastifyInstance) {
   app.register(fastifyMultipart, {
@@ -49,6 +50,17 @@ export async function wallyRoutes(app: FastifyInstance) {
       },
     },
     createWally
+  )
+
+  app.get(
+    '/role',
+    {
+      schema: {
+        tags: ['wally'],
+        description: 'Get all wally roles.',
+      },
+    },
+    getWallyRoles
   )
 
   app.post(
