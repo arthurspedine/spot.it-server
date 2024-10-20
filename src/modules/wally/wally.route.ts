@@ -33,6 +33,7 @@ export async function wallyRoutes(app: FastifyInstance) {
   app.get(
     '/',
     {
+      preHandler: [app.authenticate],
       schema: {
         tags: ['wally'],
         description: 'Get all wallies.',

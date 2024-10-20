@@ -41,7 +41,9 @@ export async function getWallyDetails(
   return reply.code(200).send(wally)
 }
 
-export async function getWallies(_: FastifyRequest, reply: FastifyReply) {
+export async function getWallies(req: FastifyRequest, reply: FastifyReply) {
+  const { id } = req.user
+
   const encountersCount = await db.$with('encounters_count').as(
     db
       .select({
@@ -67,6 +69,14 @@ export async function getWallies(_: FastifyRequest, reply: FastifyReply) {
       encounters: sql /*sql*/`
         COALESCE(${encountersCount.encountersCount}::int, 0)
     `.as('encountersCount'),
+      hasEncountered: sql /*sql*/`
+        EXISTS (
+          SELECT 1
+          FROM ${encounters}
+          WHERE ${encounters.wallyId} = ${wallies.id}
+          AND ${encounters.userId} = ${id}
+        )
+      `.as('hasEncountered'),
     })
     .from(wallies)
     .leftJoin(encountersCount, eq(encountersCount.wallyId, wallies.id))
