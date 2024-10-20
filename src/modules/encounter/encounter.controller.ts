@@ -1,13 +1,13 @@
-import type { FastifyReply, FastifyRequest } from 'fastify'
-import {
-  registerEncounterSchema,
-  type RegisterEncounterInput,
-} from './encounter.schema'
-import { db } from '../../db'
-import { encounters, users, wallies } from '../../db/schema'
 import { eq } from 'drizzle-orm'
-import app from '../../server'
+import type { FastifyReply, FastifyRequest } from 'fastify'
+import { db } from '../../db'
+import { encounters, users, wallies, wallyRoles } from '../../db/schema'
 import { env } from '../../env'
+import app from '../../server'
+import {
+  type RegisterEncounterInput,
+  registerEncounterSchema,
+} from './encounter.schema'
 
 export async function registerEncounter(
   req: FastifyRequest,
@@ -45,14 +45,28 @@ export async function registerEncounter(
   }
 
   const wallyResult = await db
-    .select()
+    .select({
+      id: wallies.id,
+      name: wallies.name,
+      roleId: wallies.roleId,
+      scoreMultiplier: wallyRoles.scoreMultiplier,
+    })
     .from(wallies)
+    .leftJoin(wallyRoles, eq(wallies.roleId, wallyRoles.id))
+    .leftJoin(encounters, eq(wallies.id, encounters.wallyId))
     .where(eq(wallies.id, wallyId))
   const wally = wallyResult[0]
 
   if (!wally) {
     return reply.code(404).send({ message: 'Wally not found' })
   }
+
+  const wallyEncountersResult = await db
+    .select()
+    .from(encounters)
+    .where(eq(encounters.wallyId, wally.id))
+
+  const hasEncounter = wallyEncountersResult[0]
 
   try {
     const { encounter } = await db.transaction(async tx => {
@@ -118,6 +132,17 @@ export async function registerEncounter(
 
       return { encounter }
     })
+
+    await db
+      .update(users)
+      .set({
+        score: String(
+          (Number(user.score) || 0) +
+            1 * Number(wally.scoreMultiplier ?? 0) *
+            (hasEncounter ? 1 : 2)
+        ),
+      })
+      .where(eq(users.id, user.id))
 
     return reply.code(200).send(encounter)
   } catch (error) {

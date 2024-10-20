@@ -169,7 +169,7 @@ export async function getUserDetails(req: FastifyRequest, reply: FastifyReply) {
       email: users.email,
       username: users.username,
       profilePicture: users.profilePicture,
-      score: sql<number> /*sql*/`${users.score}::int`.as('score'),
+      score: sql<number> /*sql*/`${users.score}::float`.as('score'),
       encounters: sql /*sql*/`
         COALESCE(${userEncounters.encounters}, '[]'::json)
       `.as('encounters'),
@@ -194,7 +194,7 @@ export async function getRank(_: FastifyRequest, reply: FastifyReply) {
       name: users.name,
       username: users.username,
       profilePicture: users.profilePicture,
-      score: sql<number> /*sql*/`${users.score}::int`.as('score'),
+      score: sql<number> /*sql*/`${users.score}::float`.as('score'),
     })
     .from(users)
     .orderBy(desc(users.score))
